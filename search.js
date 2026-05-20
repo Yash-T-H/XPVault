@@ -77,7 +77,7 @@ window.updateAllPrices = function() {
         const basePrice = parseFloat(el.getAttribute('data-base-price'));
         const converted = (basePrice * rate).toFixed(2);
         let text = el.getAttribute('data-original-text');
-        el.innerText = text.replace(/\$([0-9.]+)/, `${symbol}${converted}`);
+        el.innerText = text.replace(/\$([0-9.]+)/, () => `${symbol}${converted}`);
     });
     
     // Check if loadCart exists (we are on cart page)
