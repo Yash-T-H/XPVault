@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart - XPVault</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .cart-item {
+            display: flex;
+            align-items: center;
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .cart-item img {
+            width: 120px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-right: 20px;
+        }
+        .cart-item-details {
+            flex-grow: 1;
+        }
+        .cart-item-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+            margin: 0 0 5px 0;
+        }
+        .cart-item-price {
+            color: #10b981;
+            font-weight: bold;
+        }
+        .cart-total-container {
+            text-align: right;
+            padding: 20px;
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 10px;
+            margin-top: 20px;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body style="background-image: url(gtasa.jpg); background-size: cover; background-position: center; background-attachment: fixed; background-color: rgba(15, 23, 42, 0.25); background-blend-mode: overlay;">
+    <header>
+        <a href="index.html" class="logo">XP<span>Vault</span></a>
+        <div class="search-container">
+            <input type="text" placeholder="Search games, accounts...">
+        </div>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="games.html">Games</a>
+            <a href="suggest.html">Suggest Games</a>
+            <a href="cart.html" class="active">Cart</a>
+            <a href="login.html" class="btn">Login / Sign Up</a>
+        </nav>
+    </header>
+
+    <main>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="color: white;">Your Cart</h2>
+            <button class="btn btn-outline" onclick="clearCart()">Clear Cart</button>
+        </div>
+
+        <div id="cart-items">
+            <!-- Cart items will be loaded here -->
+        </div>
+
+        <div class="cart-total-container">
+            <h2>Total: $<span id="cart-total">0.00</span></h2>
+            <button class="btn" style="margin-top: 15px;" onclick="checkout()">Checkout</button>
+        </div>
+    </main>
+
+    <script>
+        function loadCart() {
+            const cartItems = document.getElementById('cart-items');
+            const cartTotal = document.getElementById('cart-total');
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            
+            cartItems.innerHTML = '';
+            let total = 0;
+
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p style="color: #94a3b8; text-align: center; padding: 40px;">Your cart is empty. Go add some games!</p>';
+            } else {
+                cart.forEach((item, index) => {
+                    total += item.price;
+                    cartItems.innerHTML += `
+                        <div class="cart-item">
+                            <img src="${item.image}" alt="${item.title}">
+                            <div class="cart-item-details">
+                                <h3 class="cart-item-title">${item.title}</h3>
+                                <div class="cart-item-price">$${item.price.toFixed(2)}</div>
+                            </div>
+                            <button class="btn btn-outline" style="padding: 8px 15px; font-size: 0.9rem;" onclick="removeItem(${index})">Remove</button>
+                        </div>
+                    `;
+                });
+            }
+            cartTotal.innerText = total.toFixed(2);
+        }
+
+        function removeItem(index) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            loadCart();
+        }
+
+        function clearCart() {
+            if(confirm("Are you sure you want to clear your cart?")) {
+                localStorage.removeItem('cart');
+                loadCart();
+            }
+        }
+
+        function checkout() {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            if(cart.length === 0) {
+                alert("Your cart is empty!");
+                return;
+            }
+            alert("Proceeding to checkout with " + cart.length + " item(s).");
+            
+        }
+
+        loadCart();
+    </script>
+    <script src="search.js"></script>
+</body>
+</html>

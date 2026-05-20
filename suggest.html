@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suggest a Game - XPVault</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body style = "background-image: url(wallpaperflare.com_wallpaper.jpg);">
+    <header>
+        <a href="index.html" class="logo">XP<span>Vault</span></a>
+        
+        <div class="search-container">
+            <input type="text" placeholder="Search games, accounts...">
+        </div>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="games.html">Games</a>
+            <a href="suggest.html" class="active">Suggest Games</a>
+            <a href="cart.html">Cart</a>
+            <a href="login.html" class="btn">Login / Sign Up</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="form-container">
+            <h2 style="margin-bottom: 1rem; text-align: center;">Suggest a Game</h2>
+            <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">
+                Don't see the game you're looking for? Let us know what we should add to our vault!
+            </p>
+            
+            <form action="#" method="POST">
+                <div class="form-group">
+                    <label>Game Name</label>
+                    <input type="text" placeholder="E.g., Minecraft, Apex Legends" required>
+                </div>
+                <div class="form-group">
+                    <label>Additional Notes (Optional)</label>
+                    <textarea rows="4" placeholder="What type of accounts are you looking for? (e.g., stacked, high rank)"></textarea>
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">Submit Suggestion</button>
+            </form>
+        </div>
+    </main>
+    <script src="search.js"></script>
+</body>
+</html>
