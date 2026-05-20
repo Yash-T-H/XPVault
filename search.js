@@ -50,3 +50,61 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+
+// Currency Converter Logic
+window.currencyRates = {};
+window.currentCurrency = localStorage.getItem('selectedCurrency') || 'USD';
+window.currencySymbols = { 'USD': '$', 'EUR': '€', 'GBP': '£', 'INR': '₹' };
+
+window.formatPrice = function(price) {
+    const rate = window.currencyRates[window.currentCurrency] || 1;
+    const symbol = window.currencySymbols[window.currentCurrency] || '$';
+    return symbol + (price * rate).toFixed(2);
+};
+
+window.updateAllPrices = function() {
+    const rate = window.currencyRates[window.currentCurrency] || 1;
+    const symbol = window.currencySymbols[window.currentCurrency] || '$';
+    
+    // Update game cards
+    document.querySelectorAll('.game-price').forEach(el => {
+        if (!el.hasAttribute('data-base-price')) {
+            const val = parseFloat(el.innerText.replace(/[^0-9.]/g, ''));
+            el.setAttribute('data-base-price', val);
+            el.setAttribute('data-original-text', el.innerText);
+        }
+        
+        const basePrice = parseFloat(el.getAttribute('data-base-price'));
+        const converted = (basePrice * rate).toFixed(2);
+        let text = el.getAttribute('data-original-text');
+        el.innerText = text.replace(/\$([0-9.]+)/, `${symbol}${converted}`);
+    });
+    
+    // Check if loadCart exists (we are on cart page)
+    if (typeof window.loadCart === 'function') {
+        window.loadCart();
+    }
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    const currencySelect = document.getElementById('currency-select');
+    if (currencySelect) {
+        currencySelect.value = window.currentCurrency;
+        
+        currencySelect.addEventListener('change', (e) => {
+            window.currentCurrency = e.target.value;
+            localStorage.setItem('selectedCurrency', window.currentCurrency);
+            window.updateAllPrices();
+        });
+    }
+
+    // Fetch rates
+    fetch('https://open.er-api.com/v6/latest/USD')
+        .then(res => res.json())
+        .then(data => {
+            window.currencyRates = data.rates;
+            window.currencyRates['USD'] = 1; // Base
+            window.updateAllPrices();
+        })
+        .catch(err => console.error('Error fetching currency rates', err));
+});

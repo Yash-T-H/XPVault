@@ -57,6 +57,12 @@
             <a href="games.html">Games</a>
             <a href="suggest.html">Suggest Games</a>
             <a href="cart.html" class="active">Cart</a>
+            <select id="currency-select" class="currency-dropdown">
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+                <option value="GBP">GBP</option>
+                <option value="INR">INR</option>
+            </select>
             <a href="login.html" class="btn">Login / Sign Up</a>
         </nav>
     </header>
@@ -72,7 +78,7 @@
         </div>
 
         <div class="cart-total-container">
-            <h2>Total: $<span id="cart-total">0.00</span></h2>
+            <h2>Total: <span id="cart-total-symbol">$</span><span id="cart-total">0.00</span></h2>
             <button class="btn" style="margin-top: 15px;" onclick="checkout()">Checkout</button>
         </div>
     </main>
@@ -81,6 +87,7 @@
         function loadCart() {
             const cartItems = document.getElementById('cart-items');
             const cartTotal = document.getElementById('cart-total');
+            const cartTotalSymbol = document.getElementById('cart-total-symbol');
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
             
             cartItems.innerHTML = '';
@@ -90,13 +97,15 @@
                 cartItems.innerHTML = '<p style="color: #94a3b8; text-align: center; padding: 40px;">Your cart is empty. Go add some games!</p>';
             } else {
                 cart.forEach((item, index) => {
-                    total += item.price;
+                    const priceFormatted = window.formatPrice ? window.formatPrice(item.price) : `$${item.price.toFixed(2)}`;
+                    const itemRate = (window.currencyRates && window.currencyRates[window.currentCurrency]) ? window.currencyRates[window.currentCurrency] : 1;
+                    total += (item.price * itemRate);
                     cartItems.innerHTML += `
                         <div class="cart-item">
                             <img src="${item.image}" alt="${item.title}">
                             <div class="cart-item-details">
                                 <h3 class="cart-item-title">${item.title}</h3>
-                                <div class="cart-item-price">$${item.price.toFixed(2)}</div>
+                                <div class="cart-item-price">${priceFormatted}</div>
                             </div>
                             <button class="btn btn-outline" style="padding: 8px 15px; font-size: 0.9rem;" onclick="removeItem(${index})">Remove</button>
                         </div>
@@ -104,6 +113,9 @@
                 });
             }
             cartTotal.innerText = total.toFixed(2);
+            if (cartTotalSymbol && window.currencySymbols) {
+                cartTotalSymbol.innerText = window.currencySymbols[window.currentCurrency] || '$';
+            }
         }
 
         function removeItem(index) {
@@ -127,7 +139,8 @@
                 return;
             }
             alert("Proceeding to checkout with " + cart.length + " item(s).");
-            
+            localStorage.removeItem('cart');
+            window.location.reload();
         }
 
         loadCart();

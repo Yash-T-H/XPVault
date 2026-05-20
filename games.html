@@ -24,6 +24,12 @@
             <a href="games.html" class="active">Games</a>
             <a href="suggest.html">Suggest Games</a>
             <a href="cart.html">Cart</a>
+            <select id="currency-select" class="currency-dropdown">
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+                <option value="GBP">GBP</option>
+                <option value="INR">INR</option>
+            </select>
             <a href="login.html" class="btn">Login / Sign Up</a>
         </nav>
     </header>
@@ -283,8 +289,9 @@
             button.addEventListener('click', function() {
                 const card = this.closest('.game-card');
                 const title = card.querySelector('.game-title').innerText;
-                const priceText = card.querySelector('.game-price').innerText;
-                const price = parseFloat(priceText.replace(/[^0-9.]/g, ''));
+                const priceElement = card.querySelector('.game-price');
+                const priceText = priceElement.hasAttribute('data-base-price') ? priceElement.getAttribute('data-base-price') : priceElement.innerText.replace(/[^0-9.]/g, '');
+                const price = parseFloat(priceText);
                 const image = card.querySelector('.game-image img').src;
                 
                 let cart = JSON.parse(localStorage.getItem('cart')) || [];

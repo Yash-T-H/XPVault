@@ -350,3 +350,20 @@ main {
   z-index: 1; 
   
 }
+
+/* Currency dropdown */
+.currency-dropdown {
+  background: #0f172a;
+  color: #f8fafc;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  padding: 0.5rem;
+  outline: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.3s ease;
+}
+
+.currency-dropdown:focus {
+  border-color: #8b5cf6;
+}
